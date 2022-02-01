@@ -1,7 +1,10 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import { StarIcon } from "@heroicons/react/solid";
+
 import Currency from "react-currency-formatter";
+import { addToBasket } from "../slices/basketSlice";
+import { useDispatch } from "react-redux";
 const MAX_RATING = 5;
 const MIN_RATING = 1;
 const Product = ({ id, title, price, description, category, image }) => {
@@ -9,8 +12,23 @@ const Product = ({ id, title, price, description, category, image }) => {
     // Math.floor(Math.random() * (MAX_RATING - MIN_RATING + 1)) + MIN_RATING
     Math.floor(Math.random() * 5) + 1
   );
-
   const [hasPrime] = useState(Math.random() < 0.5);
+  const dispatch = useDispatch();
+
+  const addItemToBasket = () => {
+    const product = {
+      id,
+      title,
+      price,
+      description,
+      category,
+      image,
+      rating,
+      hasPrime,
+    };
+    dispatch(addToBasket(product));
+  };
+
   return (
     <div className="relative flex flex-col m-5 bg-white z-30 p-10   ">
       <p className="absolute top-2 right-2 text-xl italic text-gray-400">
@@ -34,10 +52,12 @@ const Product = ({ id, title, price, description, category, image }) => {
       {hasPrime && (
         <div className="flex items-center space-x-3 -mt-5">
           <img className="w-12" src="https://links.papareact.com/fdw" alt="" />
-          <p className="text-gray text-gray-500">Free next-day delivery</p>
+          <p className="text-xs text-gray-500">Free next-day delivery</p>
         </div>
       )}
-      <button className="mt-auto button">Add to basket</button>
+      <button onClick={addItemToBasket} className="mt-auto button">
+        Add to basket
+      </button>
     </div>
   );
 };

@@ -1,21 +1,26 @@
 import React from "react";
+// import NextAuth from "next-auth";
 import Image from "next/image";
-import { useSession } from "next-auth/client"
 import {
   MenuIcon,
   SearchIcon,
   ShoppingCartIcon,
 } from "@heroicons/react/outline";
-
+import { signIn, signOut, useSession } from "next-auth/client";
+import { useRouter } from "next/router";
+import { useSelector } from "react-redux";
+import { selectItems } from "../slices/basketSlice";
 const Header = () => {
-  const {data:session} = useSession()
-  console.log(session);
+  const [session] = useSession();
+  const router = useRouter();
+  const items = useSelector(selectItems);
   return (
-    <div>
-      <div className="flex items-center bg-amazon_blue p-1 py-2 flex-grow">
+    <div className="sticky top-0 z-50">
+      <div className="flex  items-center bg-amazon_blue p-1 py-2 flex-grow ">
         {/* top nav */}
         <div className="mt-2 flex items-center flex-grow sm:flex-grow-0">
           <Image
+            onClick={() => router.push("/")}
             src="https://links.papareact.com/f90"
             width={150}
             height={40}
@@ -33,8 +38,8 @@ const Header = () => {
         </div>
         {/* right */}
         <div className="text-white text-xs flex space-x-6 items-center mx-6 whitespace-nowrap">
-          <div className="links">
-            <p>Hello! meer habib</p>
+          <div onClick={!session ? signIn : signOut} className="links">
+            {session ? `Hello, ${session.user.name}` : "Sign In"}{" "}
             <p className="font-extrabold md:text-sm">Account & Lists</p>
           </div>
 
@@ -43,9 +48,12 @@ const Header = () => {
             <p className="font-extrabold md:text-sm">& Orders</p>
           </div>
 
-          <div className="links relative flex items-center">
+          <div
+            onClick={() => router.push("/checkout ")}
+            className="links relative flex items-center"
+          >
             <span className="absolute top-0 right-0 md:right-10 w-4 h-4 rounded-full bg-yellow-400 justify-center items-center flex font-bold text-center text-black">
-              0
+              {items.length}
             </span>
             <ShoppingCartIcon className="h-10" />
 
