@@ -1,11 +1,15 @@
 import React from "react";
 import Image from "next/image";
+import { useSession } from "next-auth/client"
 import {
   MenuIcon,
   SearchIcon,
   ShoppingCartIcon,
 } from "@heroicons/react/outline";
+
 const Header = () => {
+  const {data:session} = useSession()
+  console.log(session);
   return (
     <div>
       <div className="flex items-center bg-amazon_blue p-1 py-2 flex-grow">
