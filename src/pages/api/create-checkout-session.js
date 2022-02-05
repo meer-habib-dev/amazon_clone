@@ -1,7 +1,6 @@
         const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY)
         export default  async (req,res) => {
-            const {items, email} = req.body
-
+    const { items, email } = req.body
             const transfromedIems = items.map(item => ({
         description: item.description,
         quantity: 1,
@@ -26,9 +25,8 @@
                 cancel_url: `${process.env.HOST}/checkout`,
                 metadata: {
                     email,
-                    images: JSON.stringify(items.map(item => item.images))
+                    images: JSON.stringify(items.map(item => item.image))
                 }
             })
-            console.log(session.id,'sada');
             res.status(200).json({id:session.id})
         }
